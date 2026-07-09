@@ -185,7 +185,7 @@ export default function SpecialCardForm({ open, onClose, sectionId, editEntry })
                   </select>
                   <input type="number" value={sp.cost} onChange={e => {
                     const copy = [...tripSupplies]; copy[i] = { ...copy[i], cost: parseInt(e.target.value) || 0 }; setTripSupplies(copy)
-                  }} placeholder="التكلفة" />
+                  }} placeholder="التكلفة" style={{ flex: 2, minWidth: 90 }} />
                   <button type="button" className="remove-btn" onClick={() => setTripSupplies(tripSupplies.filter((_, j) => j !== i))}><X size={16} /></button>
                 </div>
               ))}

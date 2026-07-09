@@ -20,10 +20,10 @@ function getWeekId(d) {
 function getMonthId(d) { return d.slice(0, 7) }
 
 function addStep(date, gran) {
-  const d = new Date(date + 'T00:00:00')
-  if (gran === 'day') d.setDate(d.getDate() + 1)
-  else if (gran === 'week') d.setDate(d.getDate() + 7)
-  else d.setMonth(d.getMonth() + 1)
+  const d = new Date(date + 'T00:00:00Z')
+  if (gran === 'day') d.setUTCDate(d.getUTCDate() + 1)
+  else if (gran === 'week') d.setUTCDate(d.getUTCDate() + 7)
+  else d.setUTCMonth(d.getUTCMonth() + 1)
   return d.toISOString().slice(0, 10)
 }
 
