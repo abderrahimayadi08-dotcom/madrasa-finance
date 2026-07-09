@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 import { useApp } from '../store.jsx'
 import { computeFundAt, fmt } from '../utils.js'
@@ -63,9 +63,13 @@ export default function FundChart() {
   const threeMonthsAgo = new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10)
   const prefs = loadChartPrefs(today, threeMonthsAgo)
 
-  const [from, setFrom] = useState(prefs.from)
-  const [to, setTo] = useState(prefs.to)
-  const [gran, setGran] = useState(prefs.gran)
+  const [from, setFrom] = useState(() => loadChartPrefs(today, threeMonthsAgo).from)
+  const [to, setTo] = useState(() => loadChartPrefs(today, threeMonthsAgo).to)
+  const [gran, setGran] = useState(() => loadChartPrefs(today, threeMonthsAgo).gran)
+
+  const handleFrom = (val) => { setFrom(val); saveChartPrefs(val, to, gran) }
+  const handleTo = (val) => { setTo(val); saveChartPrefs(from, val, gran) }
+  const handleGran = (val) => { setGran(val); saveChartPrefs(from, to, val) }
 
   const data = useMemo(() => {
     const pts = []
@@ -87,21 +91,13 @@ export default function FundChart() {
     }
     return pts
   }, [entries, settings.initialGeneralFund, from, to, gran])
-  const [prevPrefs, setPrevPrefs] = useState(null)
-  useEffect(() => {
-    const cur = { from, to, gran }
-    if (!prevPrefs || prevPrefs.from !== cur.from || prevPrefs.to !== cur.to || prevPrefs.gran !== cur.gran) {
-      saveChartPrefs(from, to, gran)
-      setPrevPrefs(cur)
-    }
-  })
 
   return (
     <div className="chart-card">
       <div className="chart-controls">
-        <input type="date" value={from} onChange={e => setFrom(e.target.value)} />
-        <input type="date" value={to} onChange={e => setTo(e.target.value)} />
-        <select value={gran} onChange={e => setGran(e.target.value)}>
+        <input type="date" value={from} onChange={e => handleFrom(e.target.value)} />
+        <input type="date" value={to} onChange={e => handleTo(e.target.value)} />
+        <select value={gran} onChange={e => handleGran(e.target.value)}>
           {granularities.map(g => <option key={g.value} value={g.value}>{g.label}</option>)}
         </select>
       </div>
