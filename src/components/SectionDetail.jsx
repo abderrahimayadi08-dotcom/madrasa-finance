@@ -45,16 +45,16 @@ export default function SectionDetail() {
     <>
       <div className="detail-header">
         <Link to="/" className="back-btn" aria-label="رجوع"><ArrowLeft size={22} /></Link>
-        <h2 style={{ fontSize: '1.125rem', fontWeight: 700 }}>{section.name}</h2>
+        <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700 }}>{section.name}</h2>
       </div>
 
       <div className="detail-meta">
         <div className={`detail-net ${net >= 0 ? 'positive' : 'negative'}`}>{fmt(net)}</div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn-primary" onClick={() => { setEditing(null); setShowEntryForm(true) }} style={{ padding: '8px 12px', fontSize: '0.813rem' }}>
+          <button className="btn-primary btn-sm" onClick={() => { setEditing(null); setShowEntryForm(true) }}>
             <Plus size={16} /> إضافة
           </button>
-          <button className="btn-primary" onClick={() => { setEditing(null); setShowCardForm(true) }} style={{ padding: '8px 12px', fontSize: '0.813rem', background: 'var(--gold)' }}>
+          <button className="btn-primary btn-sm" onClick={() => { setEditing(null); setShowCardForm(true) }} style={{ background: 'var(--gold)' }}>
             <Plus size={16} /> بطاقة خاصة
           </button>
         </div>

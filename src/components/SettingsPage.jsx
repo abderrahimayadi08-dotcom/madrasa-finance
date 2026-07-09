@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { Plus, X, Download, Upload } from 'lucide-react'
+import { Plus, X, Download, Upload, CheckCircle } from 'lucide-react'
 import { useApp } from '../store.jsx'
 import { log } from '../utils.js'
 
@@ -82,7 +82,7 @@ export default function SettingsPage() {
             placeholder="المبلغ بالدينار"
           />
           <button className="btn-primary" onClick={handleSaveFund}>
-            {saved ? '✓ تم' : 'حفظ'}
+            {saved ? <span className="saved-indicator"><CheckCircle size={16} /> تم</span> : 'حفظ'}
           </button>
         </div>
       </div>
@@ -106,7 +106,7 @@ export default function SettingsPage() {
             placeholder="إضافة مستلزم جديد"
             onKeyDown={e => { if (e.key === 'Enter') handleAddSupply() }}
           />
-          <button className="btn-primary" onClick={handleAddSupply} style={{ padding: '8px 16px' }}>
+          <button className="btn-primary btn-sm" onClick={handleAddSupply}>
             <Plus size={16} /> إضافة
           </button>
         </div>
@@ -115,10 +115,10 @@ export default function SettingsPage() {
       <div className="settings-section">
         <h2>البيانات</h2>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn-primary" onClick={handleExport} style={{ flex: 1, fontSize: '0.813rem' }}>
+          <button className="btn-primary btn-sm" onClick={handleExport} style={{ flex: 1 }}>
             <Download size={16} /> تصدير
           </button>
-          <button className="btn-primary" onClick={() => fileRef.current?.click()} style={{ flex: 1, fontSize: '0.813rem', background: 'var(--primary-dark)' }}>
+          <button className="btn-primary btn-sm" onClick={() => fileRef.current?.click()} style={{ flex: 1, background: 'var(--primary-dark)' }}>
             <Upload size={16} /> استيراد
           </button>
           <input ref={fileRef} type="file" accept=".json" onChange={handleImport} style={{ display: 'none' }} />

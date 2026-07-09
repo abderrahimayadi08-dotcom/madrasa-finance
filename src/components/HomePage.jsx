@@ -38,10 +38,10 @@ export default function HomePage() {
       <div className="fund-card">
         <div className="fund-label">المال العام للمدرسة</div>
         <div className="fund-amount">{fmt(fund)}</div>
-        <div className="fund-sub" style={{ marginTop: 4 }}>
+        <div className="fund-sub" style={{ marginTop: 'var(--space-4)' }}>
           <span style={{ opacity: 0.7 }}>المصاريف القادمة: {fmt(upcomingTotal)}</span>
         </div>
-        <div className="fund-sub" style={{ marginTop: 2, fontSize: '0.813rem', fontWeight: 600 }}>
+        <div className="fund-sub" style={{ marginTop: 'var(--space-2)', fontSize: 'var(--text-sm)', fontWeight: 600 }}>
           الصافي: {fmt(netAvailable)}
         </div>
       </div>
@@ -51,7 +51,7 @@ export default function HomePage() {
       <div className="section-list">
         <div className="section-header">
           <h2>الأقسام</h2>
-          <button className="btn-primary" onClick={() => setShowAdd(true)} style={{ padding: '8px 14px', fontSize: '0.813rem' }}>
+          <button className="btn-primary btn-sm" onClick={() => setShowAdd(true)}>
             <Plus size={16} /> إضافة قسم
           </button>
         </div>

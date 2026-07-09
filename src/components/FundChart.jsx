@@ -49,9 +49,9 @@ function saveChartPrefs(from, to, gran) {
 const CustomTooltip = ({ active, payload }) => {
   if (!active || !payload?.length) return null
   return (
-    <div style={{ background: 'white', border: '1px solid #E5E0D6', borderRadius: 8, padding: '8px 12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-      <p style={{ fontSize: '0.75rem', color: '#6B7280', marginBottom: 4 }}>{payload[0].payload.label}</p>
-      <p style={{ fontWeight: 700, fontSize: '0.938rem' }}>{fmt(payload[0].value)}</p>
+    <div style={{ background: 'white', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 12px', boxShadow: 'var(--shadow-md)' }}>
+      <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 4 }}>{payload[0].payload.label}</p>
+      <p style={{ fontWeight: 700, fontSize: 'var(--text-base)' }}>{fmt(payload[0].value)}</p>
     </div>
   )
 }
