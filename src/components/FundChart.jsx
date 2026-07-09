@@ -1,7 +1,9 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 import { useApp } from '../store.jsx'
 import { computeFundAt, fmt } from '../utils.js'
+
+const CHART_KEY = 'madrasa-finance-chart'
 
 const granularities = [
   { value: 'day', label: 'أيام' },
@@ -11,6 +13,7 @@ const granularities = [
 
 function getWeekId(d) {
   const dt = new Date(d)
+  if (isNaN(dt.getTime())) return ''
   const y = dt.getFullYear()
   const start = new Date(y, 0, 1)
   const diff = (dt - start) / 86400000
@@ -21,10 +24,26 @@ function getMonthId(d) { return d.slice(0, 7) }
 
 function addStep(date, gran) {
   const d = new Date(date + 'T00:00:00Z')
+  if (isNaN(d.getTime())) return date
   if (gran === 'day') d.setUTCDate(d.getUTCDate() + 1)
   else if (gran === 'week') d.setUTCDate(d.getUTCDate() + 7)
   else d.setUTCMonth(d.getUTCMonth() + 1)
   return d.toISOString().slice(0, 10)
+}
+
+function loadChartPrefs(today, defaultFrom) {
+  try {
+    const d = localStorage.getItem(CHART_KEY)
+    if (d) {
+      const p = JSON.parse(d)
+      return { from: p.from || defaultFrom, to: p.to || today, gran: p.gran || 'week' }
+    }
+  } catch (_) {}
+  return { from: defaultFrom, to: today, gran: 'week' }
+}
+
+function saveChartPrefs(from, to, gran) {
+  try { localStorage.setItem(CHART_KEY, JSON.stringify({ from, to, gran })) } catch (_) {}
 }
 
 const CustomTooltip = ({ active, payload }) => {
@@ -42,15 +61,17 @@ export default function FundChart() {
   const { settings, entries } = state
   const today = new Date().toISOString().slice(0, 10)
   const threeMonthsAgo = new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10)
+  const prefs = loadChartPrefs(today, threeMonthsAgo)
 
-  const [from, setFrom] = useState(threeMonthsAgo)
-  const [to, setTo] = useState(today)
-  const [gran, setGran] = useState('week')
+  const [from, setFrom] = useState(prefs.from)
+  const [to, setTo] = useState(prefs.to)
+  const [gran, setGran] = useState(prefs.gran)
 
   const data = useMemo(() => {
     const pts = []
     let cur = from
     const seen = new Set()
+    if (!cur || !to || cur > to) return pts
     while (cur <= to) {
       let key
       if (gran === 'day') key = cur
@@ -66,6 +87,14 @@ export default function FundChart() {
     }
     return pts
   }, [entries, settings.initialGeneralFund, from, to, gran])
+  const [prevPrefs, setPrevPrefs] = useState(null)
+  useEffect(() => {
+    const cur = { from, to, gran }
+    if (!prevPrefs || prevPrefs.from !== cur.from || prevPrefs.to !== cur.to || prevPrefs.gran !== cur.gran) {
+      saveChartPrefs(from, to, gran)
+      setPrevPrefs(cur)
+    }
+  })
 
   return (
     <div className="chart-card">

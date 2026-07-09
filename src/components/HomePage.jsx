@@ -8,12 +8,14 @@ import Modal from './Modal.jsx'
 
 export default function HomePage() {
   const { state, dispatch } = useApp()
-  const { sections, entries, settings } = state
+  const { sections, entries, settings, upcoming } = state
   const navigate = useNavigate()
   const [showAdd, setShowAdd] = useState(false)
   const [name, setName] = useState('')
 
   const fund = computeCurrentFund(settings.initialGeneralFund, entries)
+  const upcomingTotal = upcoming.reduce((sum, u) => sum + (u.estimatedCost || 0), 0)
+  const netAvailable = fund - upcomingTotal
 
   const handleAdd = () => {
     if (!name.trim()) return
@@ -36,7 +38,12 @@ export default function HomePage() {
       <div className="fund-card">
         <div className="fund-label">المال العام للمدرسة</div>
         <div className="fund-amount">{fmt(fund)}</div>
-        <div className="fund-sub">آخر تحديث: الآن</div>
+        <div className="fund-sub" style={{ marginTop: 4 }}>
+          <span style={{ opacity: 0.7 }}>المصاريف القادمة: {fmt(upcomingTotal)}</span>
+        </div>
+        <div className="fund-sub" style={{ marginTop: 2, fontSize: '0.813rem', fontWeight: 600 }}>
+          الصافي: {fmt(netAvailable)}
+        </div>
       </div>
 
       <FundChart />
