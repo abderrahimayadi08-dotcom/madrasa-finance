@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 import { useApp } from '../store.jsx'
 import { computeFundAt, fmt } from '../utils.js'
@@ -61,15 +61,23 @@ export default function FundChart() {
   const { settings, entries } = state
   const today = new Date().toISOString().slice(0, 10)
   const threeMonthsAgo = new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10)
-  const prefs = loadChartPrefs(today, threeMonthsAgo)
 
-  const [from, setFrom] = useState(() => loadChartPrefs(today, threeMonthsAgo).from)
-  const [to, setTo] = useState(() => loadChartPrefs(today, threeMonthsAgo).to)
-  const [gran, setGran] = useState(() => loadChartPrefs(today, threeMonthsAgo).gran)
+  const [from, setFrom] = useState(threeMonthsAgo)
+  const [to, setTo] = useState(today)
+  const [gran, setGran] = useState('week')
+  const fromRef = useRef(from)
+  const toRef = useRef(to)
+  const granRef = useRef(gran)
+  fromRef.current = from; toRef.current = to; granRef.current = gran
 
-  const handleFrom = (val) => { setFrom(val); saveChartPrefs(val, to, gran) }
-  const handleTo = (val) => { setTo(val); saveChartPrefs(from, val, gran) }
-  const handleGran = (val) => { setGran(val); saveChartPrefs(from, to, val) }
+  useEffect(() => {
+    const saved = loadChartPrefs(today, threeMonthsAgo)
+    setFrom(saved.from); setTo(saved.to); setGran(saved.gran)
+  }, [])
+
+  const handleFrom = (val) => { setFrom(val); saveChartPrefs(val, toRef.current, granRef.current) }
+  const handleTo = (val) => { setTo(val); saveChartPrefs(fromRef.current, val, granRef.current) }
+  const handleGran = (val) => { setGran(val); saveChartPrefs(fromRef.current, toRef.current, val) }
 
   const data = useMemo(() => {
     const pts = []
