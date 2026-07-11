@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
-import { Home, CalendarRange, Settings, ArrowLeft } from 'lucide-react'
+import { Home, CalendarRange, NotebookText, Settings, ArrowLeft } from 'lucide-react'
+import VoiceRecorderFAB from './VoiceRecorderFAB.jsx'
 
 export default function Layout() {
   const loc = useLocation()
@@ -29,6 +30,11 @@ export default function Layout() {
         <NavLink to="/upcoming" className={({ isActive }) => isActive ? 'active' : ''}>
           <CalendarRange size={24} />
           <span>القادمة</span>
+        </NavLink>
+        <VoiceRecorderFAB />
+        <NavLink to="/quick-record" className={({ isActive }) => isActive ? 'active' : ''}>
+          <NotebookText size={24} />
+          <span>تدوين سريع</span>
         </NavLink>
         <NavLink to="/settings" className={({ isActive }) => isActive ? 'active' : ''}>
           <Settings size={24} />

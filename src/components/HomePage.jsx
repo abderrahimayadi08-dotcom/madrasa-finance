@@ -5,6 +5,7 @@ import { useApp } from '../store.jsx'
 import { computeCurrentFund, computeSectionNet, fmt, genId, log } from '../utils.js'
 import FundChart from './FundChart.jsx'
 import Modal from './Modal.jsx'
+import EntryForm from './EntryForm.jsx'
 
 export default function HomePage() {
   const { state, dispatch } = useApp()
@@ -12,6 +13,7 @@ export default function HomePage() {
   const navigate = useNavigate()
   const [showAdd, setShowAdd] = useState(false)
   const [name, setName] = useState('')
+  const [quickEntrySec, setQuickEntrySec] = useState(null)
 
   const fund = computeCurrentFund(settings.initialGeneralFund, entries)
   const upcomingTotal = upcoming.reduce((sum, u) => sum + (u.estimatedCost || 0), 0)
@@ -73,6 +75,9 @@ export default function HomePage() {
                   <div className={`section-balance ${net < 0 ? 'negative' : ''}`}>
                     {fmt(net)}
                   </div>
+                  <button className="quick-entry-btn" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setQuickEntrySec(sec.id) }}>
+                    <Plus size={12} /> إضافة حركة
+                  </button>
                 </Link>
               )
             })}
@@ -97,6 +102,15 @@ export default function HomePage() {
           <button className="btn-primary" onClick={handleAdd}>إضافة</button>
         </div>
       </Modal>
+
+      {quickEntrySec && (
+        <EntryForm
+          open={true}
+          onClose={() => setQuickEntrySec(null)}
+          sectionId={quickEntrySec}
+          editEntry={null}
+        />
+      )}
     </>
   )
 }

@@ -27,6 +27,12 @@ export function computeSectionNet(entries, sectionId) {
   return net
 }
 
+
+const LAST_EXPORT_KEY = 'madrasa-finance-last-export'
+export function saveExportTimestamp() {
+  localStorage.setItem(LAST_EXPORT_KEY, new Date().toISOString())
+}
+
 export function computeTripNet(d) {
   if (!d) return 0
   const inc = (d.received || 0) + (d.grants || []).reduce((s, g) => s + (g.amount || 0), 0)

@@ -56,7 +56,7 @@ export default function UpcomingPage() {
       )}
 
       <div className="add-form">
-        <h3 style={{ fontSize: '0.938rem', fontWeight: 700 }}>إضافة مصروف قادم</h3>
+        <h3>إضافة مصروف قادم</h3>
         <input
           type="text"
           value={title}

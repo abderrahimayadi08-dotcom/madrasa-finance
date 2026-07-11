@@ -1,16 +1,22 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import { AppProvider } from './store.jsx'
+import { QuickProvider } from './quickStore.jsx'
+import { VaultProvider } from './vaultStore.jsx'
 import App from './App.jsx'
 import './styles.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter basename="/madrasa-finance">
-      <AppProvider>
-        <App />
-      </AppProvider>
-    </BrowserRouter>
+    <HashRouter>
+      <VaultProvider>
+        <QuickProvider>
+          <AppProvider>
+            <App />
+          </AppProvider>
+        </QuickProvider>
+      </VaultProvider>
+    </HashRouter>
   </StrictMode>
 )

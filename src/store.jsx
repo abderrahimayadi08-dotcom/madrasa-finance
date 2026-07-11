@@ -1,24 +1,28 @@
 import { createContext, useContext, useReducer, useEffect } from 'react'
 
-const KEY = 'madrasa-finance'
-
 const defaults = {
   sections: [],
   entries: [],
   upcoming: [],
-  settings: { initialGeneralFund: 20000, tripSupplies: ['اكراميات', 'ماء', 'وجبات خفيفة', 'هدايا'] }
+  settings: { initialGeneralFund: 20000, tripSupplies: ['اكراميات', 'ماء', 'وجبات خفيفة', 'هدايا'], notifEnabled: false, notifInterval: 1 }
 }
 
-function load() {
+export function getVaultKey() {
+  const activeId = localStorage.getItem('madrasa-finance-active-vault')
+  if (activeId) return `madrasa-finance-vault-${activeId}`
+  return 'madrasa-finance'
+}
+
+export function load() {
   try {
-    const d = localStorage.getItem(KEY)
+    const d = localStorage.getItem(getVaultKey())
     if (d) return { ...defaults, ...JSON.parse(d) }
   } catch (_) {}
   return { ...defaults }
 }
 
 function save(state) {
-  try { localStorage.setItem(KEY, JSON.stringify(state)) } catch (_) {}
+  try { localStorage.setItem(getVaultKey(), JSON.stringify(state)) } catch (_) {}
 }
 
 function reducer(state, action) {
@@ -41,6 +45,8 @@ function reducer(state, action) {
       return { ...state, settings: { ...state.settings, ...action.payload } }
     case 'REPLACE_STATE':
       return action.payload
+    case 'SWITCH_VAULT':
+      return load()
     default:
       return state
   }

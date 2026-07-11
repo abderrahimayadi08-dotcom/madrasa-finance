@@ -25,6 +25,7 @@ export default function SpecialCardForm({ open, onClose, sectionId, editEntry })
   const [purchases, setPurchases] = useState([])
   const [workerPay, setWorkerPay] = useState('')
 
+  const toNum = v => v === '' ? '' : String(parseInt(v, 10))
   const tripSuppliesList = state.settings.tripSupplies || []
   const expectedTotal = parseInt(studentCount || 0) * parseInt(feePerStudent || 0)
   const receivedVal = parseInt(received || 0)
@@ -126,16 +127,16 @@ export default function SpecialCardForm({ open, onClose, sectionId, editEntry })
               <div className="form-row">
                 <div className="form-group">
                   <label>عدد التلاميذ</label>
-                  <input type="number" value={studentCount} onChange={e => setStudentCount(e.target.value)} placeholder="0" />
+                  <input type="number" value={studentCount} onChange={e => setStudentCount(toNum(e.target.value))} placeholder="0" />
                 </div>
                 <div className="form-group">
                   <label>مبلغ الاشتراك</label>
-                  <input type="number" value={feePerStudent} onChange={e => setFeePerStudent(e.target.value)} placeholder="0" />
+                  <input type="number" value={feePerStudent} onChange={e => setFeePerStudent(toNum(e.target.value))} placeholder="0" />
                 </div>
               </div>
               <div className="form-group">
                 <label>المبلغ المستلم</label>
-                <input type="number" value={received} onChange={e => setReceived(e.target.value)} placeholder="0" />
+                <input type="number" value={received} onChange={e => setReceived(toNum(e.target.value))} placeholder="0" />
               </div>
               {expectedTotal > 0 && (
                 <div className={`warning-badge ${diff === 0 ? 'ok' : 'warn'}`}>
@@ -152,7 +153,7 @@ export default function SpecialCardForm({ open, onClose, sectionId, editEntry })
 
             <div className="form-group">
               <label>تكلفة النقل</label>
-              <input type="number" value={transportCost} onChange={e => setTransportCost(e.target.value)} placeholder="0" />
+              <input type="number" value={transportCost} onChange={e => setTransportCost(toNum(e.target.value))} placeholder="0" />
             </div>
 
             <div className="sub-section">
@@ -234,7 +235,7 @@ export default function SpecialCardForm({ open, onClose, sectionId, editEntry })
 
             <div className="form-group">
               <label>أجرة عامل الصيانة</label>
-              <input type="number" value={workerPay} onChange={e => setWorkerPay(e.target.value)} placeholder="0" />
+              <input type="number" value={workerPay} onChange={e => setWorkerPay(toNum(e.target.value))} placeholder="0" />
             </div>
           </>
         )}
